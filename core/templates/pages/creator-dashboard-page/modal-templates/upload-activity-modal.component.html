@@ -13,7 +13,7 @@
           Upload YAML file
         </label>
         <div class="col-lg-10 col-md-10 col-sm-10">
-          <input id="newFileInput" type="file">
+          <input id="newFileInput" type="file" (change)="onFileSelected($event)">
         </div>
       </div>
     </fieldset>

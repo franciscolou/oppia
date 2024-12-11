@@ -29,28 +29,30 @@ interface ExplorationObj {
   templateUrl: './upload-activity-modal.component.html',
 })
 export class UploadActivityModalComponent {
+  selectedFile: File | null = null;
+
   constructor(
     private alertsService: AlertsService,
     private activeModal: NgbActiveModal
   ) {}
 
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files.length > 0) {
+      this.selectedFile = input.files[0];
+    } else {
+      this.selectedFile = null;
+    }
+  }
+
   save(): void {
-    let returnObj: ExplorationObj = {
-      yamlFile: null,
-    };
-    let label = document.getElementById('newFileInput') as HTMLInputElement;
-    if (label === null) {
-      throw new Error('No label found for uploading files.');
-    }
-    if (label.files === null) {
-      throw new Error('No files found.');
-    }
-    let file = label.files[0];
-    if (!file || !file.size) {
+    if (!this.selectedFile || !this.selectedFile.size) {
       this.alertsService.addWarning('Empty file detected.');
       return;
     }
-    returnObj.yamlFile = file;
+    const returnObj: ExplorationObj = {
+      yamlFile: this.selectedFile,
+    };
     this.activeModal.close(returnObj);
   }
 
@@ -58,3 +60,4 @@ export class UploadActivityModalComponent {
     this.activeModal.dismiss();
   }
 }
+
